@@ -1,82 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tour Package Pricing</title>
-    <!-- Link to external CSS file -->
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <header>
-        <h1>Visa Pricing Form</h1>
-    </header>
-    
-    <section>
-        <form id="pricingForm">
-            <label for="country">Country:</label>
-            <select id="country" name="country">
-                <option value="USA">USA</option>
-                <option value="UK">UK</option>
-                <option value="Canada">Canada</option>
-            </select><br>
-
-            <label for="visaType">Visa Type:</label>
-            <select id="visaType" name="visaType">
-                <option value="single">Single Entry</option>
-                <option value="multiple">Multiple Entry</option>
-            </select><br>
-
-            <label for="currency">Currency:</label>
-            <select id="currency" name="currency">
-                <option value="USD">USD</option>
-                <option value="GBP">GBP</option>
-                <option value="CAD">CAD</option>
-            </select><br>
-
-            <!-- Quantity Input for Adult -->
-            <label for="adultQty">Adult (Quantity):</label>
-            <input type="number" id="adultQty" name="adultQty" min="0" value="0"><br>
-
-            <!-- Quantity Input for Child -->
-            <label for="childQty">Child (Quantity):</label>
-            <input type="number" id="childQty" name="childQty" min="0" value="0"><br>
-
-            <!-- Quantity Input for Infant -->
-            <label for="infantQty">Infant (Quantity):</label>
-            <input type="number" id="infantQty" name="infantQty" min="0" value="0"><br>
-
-            <input type="submit" value="Calculate Total Price">
-        </form>
-
-        <!-- Section to display the calculated total price -->
-        <div id="totalPriceSection">
-            <h2>Total Price: <span id="totalPrice">0</span></h2>
-        </div>
-    </section>
-
-    <script>
-        // JavaScript to handle form submission and calculate the total price
-        document.getElementById('pricingForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            // Dummy pricing per person type (this can later be replaced with dynamic values)
-            const adultPrice = 100;
-            const childPrice = 50;
-            const infantPrice = 25;
-
-            // Get the quantity values from the input fields
-            const adultQty = parseInt(document.getElementById('adultQty').value) || 0;
-            const childQty = parseInt(document.getElementById('childQty').value) || 0;
-            const infantQty = parseInt(document.getElementById('infantQty').value) || 0;
-
-            // Calculate the total price based on quantities and prices
-            const totalPrice = (adultQty * adultPrice) + (childQty * childPrice) + (infantQty * infantPrice);
-
-            // Display the total price
-            document.getElementById('totalPrice').innerText = totalPrice;
+<script>
+    document.querySelector('form').addEventListener('submit', function (event) {
+      event.preventDefault();
+  
+      const country = document.querySelector('#country').value;
+      const visaType = document.querySelector('#visa-type').value;
+      const paxTypeAdult = document.querySelector('#pax-type-adult').value;
+      const paxTypeChild = document.querySelector('#pax-type-child').value;
+      const paxTypeInfant = document.querySelector('#pax-type-infant').value;
+      const currency = document.querySelector('#currency').value;
+  
+      // Fetch price for adult
+      fetch(`http://localhost:3000/api/visa-price?country=${country}&visaType=${visaType}&paxType=Adult`)
+        .then(response => response.json())
+        .then(adultPriceData => {
+          const adultPrice = adultPriceData[currency.toLowerCase()];
+          const totalAdultPrice = adultPrice * paxTypeAdult;
+  
+          // Fetch price for child
+          fetch(`http://localhost:3000/api/visa-price?country=${country}&visaType=${visaType}&paxType=Child`)
+            .then(response => response.json())
+            .then(childPriceData => {
+              const childPrice = childPriceData[currency.toLowerCase()];
+              const totalChildPrice = childPrice * paxTypeChild;
+  
+              // Fetch price for infant
+              fetch(`http://localhost:3000/api/visa-price?country=${country}&visaType=${visaType}&paxType=Infant`)
+                .then(response => response.json())
+                .then(infantPriceData => {
+                  const infantPrice = infantPriceData[currency.toLowerCase()];
+                  const totalInfantPrice = infantPrice * paxTypeInfant;
+  
+                  // Calculate total price
+                  const totalPrice = totalAdultPrice + totalChildPrice + totalInfantPrice;
+                  document.querySelector('#total-price').textContent = `Total Price: ${totalPrice} ${currency}`;
+                });
+            });
         });
-    </script>
-
-</body>
-</html>
+    });
+  </script>
+  
