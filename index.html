@@ -13,27 +13,18 @@
     </header>
     
     <section>
-        <form>
+        <form id="pricingForm">
             <label for="country">Country:</label>
             <select id="country" name="country">
-                <option value="Saudi_Arabia">KSA</option>
-                <option value="United_Arab_Emirates">UAE</option>
-                <option value="Malaysia">Malaysia</option>
+                <option value="USA">USA</option>
+                <option value="UK">UK</option>
+                <option value="Canada">Canada</option>
             </select><br>
 
             <label for="visaType">Visa Type:</label>
             <select id="visaType" name="visaType">
-                <option value="single">Umrah Single Entry (30 Days)</option>
-                <option value="single">Tourist Single Entry (30 Days)</option>
-                <option value="single">Tourist Single Entry (60 Days)</option>
-                <option value="multiple">Tourist Multiple Entry (30 Days)</option>
-            </select><br>
-
-            <label for="paxType">Pax Type:</label>
-            <select id="paxType" name="paxType">
-                <option value="adult">Adult</option>
-                <option value="child">Child</option>
-                <option value="infant">Infant</option>
+                <option value="single">Single Entry</option>
+                <option value="multiple">Multiple Entry</option>
             </select><br>
 
             <label for="currency">Currency:</label>
@@ -43,9 +34,49 @@
                 <option value="CAD">CAD</option>
             </select><br>
 
-            <input type="submit" value="Get Price">
+            <!-- Quantity Input for Adult -->
+            <label for="adultQty">Adult (Quantity):</label>
+            <input type="number" id="adultQty" name="adultQty" min="0" value="0"><br>
+
+            <!-- Quantity Input for Child -->
+            <label for="childQty">Child (Quantity):</label>
+            <input type="number" id="childQty" name="childQty" min="0" value="0"><br>
+
+            <!-- Quantity Input for Infant -->
+            <label for="infantQty">Infant (Quantity):</label>
+            <input type="number" id="infantQty" name="infantQty" min="0" value="0"><br>
+
+            <input type="submit" value="Calculate Total Price">
         </form>
+
+        <!-- Section to display the calculated total price -->
+        <div id="totalPriceSection">
+            <h2>Total Price: <span id="totalPrice">0</span></h2>
+        </div>
     </section>
+
+    <script>
+        // JavaScript to handle form submission and calculate the total price
+        document.getElementById('pricingForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Dummy pricing per person type (this can later be replaced with dynamic values)
+            const adultPrice = 100;
+            const childPrice = 50;
+            const infantPrice = 25;
+
+            // Get the quantity values from the input fields
+            const adultQty = parseInt(document.getElementById('adultQty').value) || 0;
+            const childQty = parseInt(document.getElementById('childQty').value) || 0;
+            const infantQty = parseInt(document.getElementById('infantQty').value) || 0;
+
+            // Calculate the total price based on quantities and prices
+            const totalPrice = (adultQty * adultPrice) + (childQty * childPrice) + (infantQty * infantPrice);
+
+            // Display the total price
+            document.getElementById('totalPrice').innerText = totalPrice;
+        });
+    </script>
 
 </body>
 </html>
