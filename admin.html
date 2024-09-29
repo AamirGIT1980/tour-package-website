@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Add Visa Price</title>
+    <style>
+        /* Add some basic styles */
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        label, input, select { display: block; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Add/Update Visa Price</h1>
+    
+    <form id="visaPriceForm">
+        <label for="country">Country:</label>
+        <input type="text" id="country" name="country" required>
+
+        <label for="visaType">Visa Type:</label>
+        <select id="visaType" name="visaType" required>
+            <option value="Single Entry">Single Entry</option>
+            <option value="Multiple Entry">Multiple Entry</option>
+        </select>
+
+        <label for="paxType">Passenger Type:</label>
+        <select id="paxType" name="paxType" required>
+            <option value="Adult">Adult</option>
+            <option value="Child">Child</option>
+            <option value="Infant">Infant</option>
+        </select>
+
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" required>
+
+        <button type="submit">Add/Update Price</button>
+    </form>
+
+    <script>
+        document.getElementById('visaPriceForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const country = document.getElementById('country').value;
+            const visaType = document.getElementById('visaType').value;
+            const paxType = document.getElementById('paxType').value;
+            const price = document.getElementById('price').value;
+
+            const data = { country, visaType, paxType, price };
+
+            fetch('http://localhost:3000/api/add-visa-price', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                alert(result.message);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to add/update visa price');
+            });
+        });
+    </script>
+</body>
+</html>
